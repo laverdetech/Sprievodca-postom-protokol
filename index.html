@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprievodca Pôstom | Interaktívna Analýza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e172b;
+            color: #ffffff;
+        }
+        .glass-effect {
+            background: rgba(30, 40, 58, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 188, 248, 0.1);
+        }
+        .highlight-text {
+            color: #38bcf8;
+        }
+        .bg-accent {
+            background-color: #38bcf8;
+        }
+        .border-accent {
+            border-color: #38bcf8;
+        }
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Custom slider styles */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #1e283a;
+            border-radius: 5px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #38bcf8;
+            cursor: pointer;
+            margin-top: -10px;
+            border: 4px solid #0e172b;
+        }
+        input[type=range]::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #1e283a;
+            border-radius: 5px;
+        }
+        input[type=range]::-moz-range-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #38bcf8;
+            cursor: pointer;
+            border: 4px solid #0e172b;
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+
+    <!-- Header -->
+    <header class="container mx-auto px-6 py-12 text-center fade-in">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">
+            Sprievodca Svetom <span class="highlight-text">Pôstu</span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+            Objavte silu metabolickej flexibility a bunkovej obnovy. Interaktívny prehľad pôstnych protokolov od 12 do 72 hodín, založený na vedeckých poznatkoch.
+        </p>
+    </header>
+
+    <main class="container mx-auto px-6">
+
+        <!-- Sekcia Metabolická Cesta -->
+        <section class="my-16 fade-in">
+            <h2 class="text-3xl font-bold text-center mb-10">Metabolická Cesta Telom Počas Pôstu</h2>
+            <div class="relative w-full max-w-5xl mx-auto">
+                <!-- Timeline Line -->
+                <div class="absolute left-4 top-4 bottom-4 w-1 bg-[#1e283a] rounded-full"></div>
+                
+                <!-- Timeline Items -->
+                <div class="space-y-12">
+                    <!-- 0-12 Hodín -->
+                    <div class="relative flex items-center">
+                        <div class="w-full ml-12">
+                            <div class="bg-[#1e283a] p-6 rounded-xl shadow-lg border border-transparent hover:border-accent transition-all duration-300">
+                                <p class="text-sm font-semibold highlight-text mb-1">0-12 Hodín</p>
+                                <h3 class="text-xl font-bold mb-2">Prechod do Katabolizmu</h3>
+                                <p class="text-gray-300 text-sm">Telo spotrebúva glukózu z posledného jedla. Hladina inzulínu klesá, čo je signál pre telo, aby začalo siahať po uložených zásobách energie.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 w-8 h-8 bg-[#0e172b] border-4 border-accent rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-accent rounded-full"></div>
+                        </div>
+                    </div>
+                    <!-- 12-24 Hodín -->
+                    <div class="relative flex items-center">
+                        <div class="w-full ml-12">
+                             <div class="bg-[#1e283a] p-6 rounded-xl shadow-lg border border-transparent hover:border-accent transition-all duration-300">
+                                <p class="text-sm font-semibold highlight-text mb-1">12-24 Hodín</p>
+                                <h3 class="text-xl font-bold mb-2">Metabolický Prepínač</h3>
+                                <p class="text-gray-300 text-sm">Zásoby glykogénu sa vyčerpávajú. Telo začína produkovať ketóny ako alternatívne palivo a spúšťa sa proces autofágie - bunkového čistenia.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 w-8 h-8 bg-[#0e172b] border-4 border-accent rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-accent rounded-full"></div>
+                        </div>
+                    </div>
+                    <!-- 24-48 Hodín -->
+                    <div class="relative flex items-center">
+                        <div class="w-full ml-12">
+                             <div class="bg-[#1e283a] p-6 rounded-xl shadow-lg border border-transparent hover:border-accent transition-all duration-300">
+                                <p class="text-sm font-semibold highlight-text mb-1">24-48 Hodín</p>
+                                <h3 class="text-xl font-bold mb-2">Hlboký Pôst</h3>
+                                <p class="text-gray-300 text-sm">Telo je v hlbokej ketóze. Výrazne stúpa hladina rastového hormónu (HGH) a maximalizuje sa autofágia, čo vedie k intenzívnej bunkovej oprave.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 w-8 h-8 bg-[#0e172b] border-4 border-accent rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-accent rounded-full"></div>
+                        </div>
+                    </div>
+                    <!-- 48-72 Hodín -->
+                    <div class="relative flex items-center">
+                        <div class="w-full ml-12">
+                             <div class="bg-[#1e283a] p-6 rounded-xl shadow-lg border border-transparent hover:border-accent transition-all duration-300">
+                                <p class="text-sm font-semibold highlight-text mb-1">48-72 Hodín</p>
+                                <h3 class="text-xl font-bold mb-2">Systémový Reset</h3>
+                                <p class="text-gray-300 text-sm">Dochádza k regenerácii imunitných buniek a kmeňových buniek. Toto štádium ponúka hĺbkové benefity, no vyžaduje si skúsenosti a opatrnosť.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-4 w-8 h-8 bg-[#0e172b] border-4 border-accent rounded-full flex items-center justify-center">
+                            <div class="w-2 h-2 bg-accent rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sekcia Grafy -->
+        <section class="my-24 fade-in">
+            <h2 class="text-3xl font-bold text-center mb-4">Vizualizácia Priebehu Pôstu</h2>
+            <p class="text-center text-gray-400 mb-10">Posuňte a sledujte, ako sa menia kľúčové ukazovatele v priebehu 72 hodín.</p>
+            
+            <div class="bg-[#1e283a] p-6 md:p-8 rounded-2xl shadow-lg">
+                <!-- Slider -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400 text-sm">Začiatok Pôstu</span>
+                        <span id="slider-value" class="text-xl font-bold highlight-text">0 hodín</span>
+                        <span class="text-gray-400 text-sm">72 hodín</span>
+                    </div>
+                    <input type="range" id="hour-slider" min="0" max="72" value="0" step="1">
+                </div>
+
+                <!-- Value Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-[#0e172b] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Inzulín / Glukóza</p>
+                        <p id="insulin-value" class="text-2xl font-bold">Vysoká</p>
+                    </div>
+                     <div class="bg-[#0e172b] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Ketóny</p>
+                        <p id="ketones-value" class="text-2xl font-bold">Nízka</p>
+                    </div>
+                     <div class="bg-[#0e172b] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Autofágia</p>
+                        <p id="autophagy-value" class="text-2xl font-bold">Minimálna</p>
+                    </div>
+                     <div class="bg-[#0e172b] p-4 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Rastový Hormón</p>
+                        <p id="hgh-value" class="text-2xl font-bold">Normálna</p>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="relative h-64 md:h-96">
+                    <canvas id="fastingChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Sekcia Pôstne Protokoly -->
+        <section class="my-24 fade-in" id="protocols">
+            <h2 class="text-3xl font-bold text-center mb-10">Porovnanie Pôstnych Protokolov</h2>
+            <div id="protocol-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Karty protokolov sa vygenerujú pomocou JS -->
+            </div>
+        </section>
+
+        <!-- Sekcia s detailmi protokolu (Modal/Panel) -->
+        <section id="protocol-details-container" class="my-16 hidden fade-in">
+             <div class="glass-effect rounded-2xl p-8 max-w-4xl mx-auto">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 id="details-title" class="text-3xl font-bold highlight-text mb-2"></h2>
+                        <p id="details-suitability" class="text-gray-300 mb-4"></p>
+                    </div>
+                    <button id="close-details" class="text-2xl text-gray-400 hover:text-white transition">&times;</button>
+                </div>
+                <p id="details-description" class="mb-6"></p>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">Hlavné benefity:</h4>
+                        <p id="details-benefits" class="text-gray-300"></p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-2">Na čo si dať pozor:</h4>
+                        <p id="details-recommendations" class="text-gray-300"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sekcia Praktická Príručka -->
+        <section class="my-24 fade-in">
+            <h2 class="text-3xl font-bold text-center mb-10">Praktická Príručka pre Bezpečný Pôst</h2>
+            <div class="max-w-3xl mx-auto space-y-4" id="faq-accordion">
+                <!-- Accordion Items sa vygenerujú pomocou JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 mt-16 border-t border-[#1e283a]">
+        <p class="text-gray-400">&copy; 2025 Sprievodca Pôstom. Vytvorené s cieľom informovať a vzdelávať.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- DATA ---
+            const protocols = [
+                {
+                    duration: '12h',
+                    title: '12-hodinový Pôst',
+                    subtitle: 'Cirkadiánny Rytmus',
+                    suitability: 'Ideálne pre začiatočníkov.',
+                    description: 'Najmiernejšia forma prerušovaného pôstu, ktorá sa zosúlaďuje s prirodzenými dennými rytmami tela. Skvelý prvý krok.',
+                    benefits: 'Zlepšenie kvality spánku, zosúladenie s cirkadiánnym rytmom, podpora trávenia.',
+                    recommendations: 'Ukončite jedenie 2-3 hodiny pred spaním. Po prebudení sa hydratujte. Vhodné na každodennú prax.'
+                },
+                {
+                    duration: '16h',
+                    title: '16-hodinový Pôst',
+                    subtitle: 'Metóda 16/8',
+                    suitability: 'Pre začiatočníkov až stredne pokročilých.',
+                    description: 'Najpopulárnejšia forma pôstu s 8-hodinovým jedálenským oknom. Udržateľná a efektívna metóda.',
+                    benefits: 'Zlepšená citlivosť na inzulín, spaľovanie tukov, udržateľné chudnutie, iniciácia autofágie.',
+                    recommendations: 'Posledné jedlo by malo byť bohaté na bielkoviny a vlákninu. Ranná káva alebo čaj môžu pomôcť. Ideálny čas na ľahšie cvičenie je pred prerušením pôstu.'
+                },
+                {
+                    duration: '24h',
+                    title: '24-hodinový Pôst',
+                    subtitle: 'Eat-Stop-Eat',
+                    suitability: 'Pre stredne pokročilých a pokročilých.',
+                    description: 'Celodenný pôst, typicky od večere do večere, praktizovaný 1-2 krát týždenne. Vyžaduje mentálnu prípravu.',
+                    benefits: 'Výrazné spaľovanie tukov, silná autofágia, významný nárast rastového hormónu (HGH).',
+                    recommendations: 'Kľúčové je dopĺňanie elektrolytov (soľ, draslík, horčík), aby ste predišli bolestiam hlavy. Vyhnite sa intenzívnemu cvičeniu. Prerušte pôst malým a ľahkým jedlom.'
+                },
+                {
+                    duration: '36h',
+                    title: '36-hodinový Pôst',
+                    subtitle: 'Mníšsky Pôst',
+                    suitability: 'Len pre skúsených jedincov.',
+                    description: 'Zahŕňa vynechanie jedla na celý jeden deň. Napríklad od večere v pondelok do raňajok v stredu.',
+                    benefits: 'Hlboká ketóza, maximalizácia autofágie, extrémna mentálna jasnosť.',
+                    recommendations: 'Suplementácia elektrolytov je nevyhnutná. Počúvajte svoje telo a v prípade extrémnej slabosti pôst prerušte. Vyžaduje sa odpočinok.'
+                },
+                {
+                    duration: '48h',
+                    title: '48-hodinový Pôst',
+                    subtitle: 'Hĺbková Obnova',
+                    suitability: 'Pre veľmi skúsených, ideálne po konzultácii s lekárom.',
+                    description: 'Dva celé dni bez jedla. Ponúka potenciál pre regeneráciu imunitných buniek, no prináša aj riziká.',
+                    benefits: 'Vrchol autofágie, potenciálna regenerácia imunitných buniek, hĺbkový reset.',
+                    recommendations: 'Druhý deň je často ľahší ako prvý. Prerušenie pôstu (re-feed) musí byť veľmi opatrné – začnite napríklad kostným vývarom.'
+                },
+                {
+                    duration: '72h',
+                    title: '72-hodinový Pôst',
+                    subtitle: 'Systémový Reset',
+                    suitability: 'Výlučne pre expertov pod lekárskym dohľadom.',
+                    description: 'Tri celé dni bez jedla. Významná fyziologická výzva s potenciálom pre regeneráciu kmeňových buniek.',
+                    benefits: 'Aktivácia regenerácie kmeňových buniek, kompletný systémový reset.',
+                    recommendations: 'Absolútny pokojový režim je nutnosťou. Riziká sú značné, vrátane straty svalovej hmoty a refeeding syndrómu. Vyžaduje profesionálne monitorovanie.'
+                }
+            ];
+
+            const faqData = [
+                {
+                    question: '💧 Hydratácia a Elektrolyty',
+                    answer: 'Pite dostatok nekalorických tekutín ako voda, bylinkový čaj alebo čierna káva. Pri pôstoch nad 24 hodín je kľúčové dopĺňať elektrolyty (štipka kvalitnej soli do vody, doplnky s draslíkom a horčíkom), aby ste predišli bolestiam hlavy, únave a svalovým kŕčom.'
+                },
+                {
+                    question: '🏋️ Pôst a Fyzický Výkon',
+                    answer: 'Ľahká aktivita ako chôdza alebo joga je zvyčajne v poriadku. Intenzívny tréning môže byť náročný kvôli vyčerpaným zásobám glykogénu. Tréning tesne pred prerušením pôstu môže maximalizovať rast svalov vďaka zvýšenej citlivosti na inzulín.'
+                },
+                {
+                    question: '🍲 Ako Bezpečne Prerušiť Pôst (Re-feed)',
+                    answer: 'Prerušenie dlhšieho pôstu (48h+) je kritické. Začnite pomaly a opatrne. Prvé jedlo by malo byť malé, ľahko stráviteľné, s nízkym obsahom sacharidov. Ideálny je kostný vývar, avokádo, alebo malá porcia bielkovín so zeleninou. Vyhnite sa cukru a veľkým porciám.'
+                },
+                {
+                    question: '⚠️ Pre Koho Pôst Nie Je Vhodný?',
+                    answer: 'Pôst nie je vhodný pre tehotné a dojčiace ženy, deti, osoby s podváhou (BMI < 18.5), s poruchami príjmu potravy v anamnéze, alebo s určitými zdravotnými stavmi (napr. diabetes 1. typu). Vždy sa poraďte so svojím lekárom predtým, ako začnete s akýmkoľvek pôstnym režimom.'
+                }
+            ];
+
+            // --- RENDER FUNCTIONS ---
+            const protocolCardsContainer = document.getElementById('protocol-cards');
+            protocols.forEach((protocol, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-[#1e283a] p-6 rounded-2xl shadow-lg cursor-pointer transform hover:scale-105 hover:shadow-cyan-500/20 transition-all duration-300';
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold">${protocol.title}</h3>
+                        <span class="bg-accent text-[#0e172b] text-xs font-bold px-3 py-1 rounded-full">${protocol.duration}</span>
+                    </div>
+                    <p class="text-gray-400 mb-1 text-sm font-medium">${protocol.subtitle}</p>
+                    <p class="text-gray-300">${protocol.suitability}</p>
+                `;
+                protocolCardsContainer.appendChild(card);
+            });
+
+            const accordionContainer = document.getElementById('faq-accordion');
+            faqData.forEach(item => {
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'bg-[#1e283a] rounded-xl overflow-hidden';
+                accordionItem.innerHTML = `
+                    <button class="w-full text-left p-4 flex justify-between items-center hover:bg-[#2a384e] transition">
+                        <span class="font-semibold">${item.question}</span>
+                        <span class="transform transition-transform duration-300 text-accent">&#9660;</span>
+                    </button>
+                    <div class="px-4 pb-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
+                        <p class="text-gray-300 py-4 border-t border-gray-700">${item.answer}</p>
+                    </div>
+                `;
+                accordionContainer.appendChild(accordionItem);
+            });
+            
+            // --- CHART LOGIC ---
+            function initCharts() {
+                const ctx = document.getElementById('fastingChart');
+                if (!ctx) return;
+
+                const labels = Array.from({ length: 73 }, (_, i) => i);
+
+                // Approximated data based on the document
+                const insulinData = [100, 95, 90, 85, 80, 75, 70, 65, 60, 50, 40, 30, 20, 15, 12, 10, 8, 7, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+                const ketonesData = [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 5, 8, 12, 16, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 84, 88, 92, 95, 98, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+                const autophagyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 6, 8, 12, 16, 20, 25, 30, 35, 40, 45, 55, 65, 75, 80, 84, 88, 92, 95, 98, 99, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77];
+                const hghData = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 50, 80, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+                
+                const dataStore = { insulinData, ketonesData, autophagyData, hghData };
+
+                const verticalLinePlugin = {
+                    id: 'verticalLine',
+                    afterDraw: chart => {
+                        if (chart.tooltip?._active?.length) {
+                            let x = chart.tooltip._active[0].element.x;
+                            let yAxis = chart.scales.y;
+                            let ctx = chart.ctx;
+                            ctx.save();
+                            ctx.beginPath();
+                            ctx.moveTo(x, yAxis.top);
+                            ctx.lineTo(x, yAxis.bottom);
+                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = 'rgba(56, 188, 248, 0.5)';
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    }
+                };
+
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Inzulín/Glukóza',
+                                data: insulinData,
+                                borderColor: '#f87171',
+                                tension: 0.4,
+                                pointRadius: 0,
+                                borderWidth: 2,
+                            },
+                            {
+                                label: 'Ketóny',
+                                data: ketonesData,
+                                borderColor: '#4ade80',
+                                tension: 0.4,
+                                pointRadius: 0,
+                                borderWidth: 2,
+                            },
+                            {
+                                label: 'Autofágia',
+                                data: autophagyData,
+                                borderColor: '#38bcf8',
+                                tension: 0.4,
+                                pointRadius: 0,
+                                borderWidth: 2,
+                            },
+                            {
+                                label: 'HGH',
+                                data: hghData,
+                                borderColor: '#facc15',
+                                tension: 0.4,
+                                pointRadius: 0,
+                                borderWidth: 2,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                           duration: 1000,
+                           easing: 'easeInOutQuad'
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#9ca3af',
+                                    usePointStyle: true,
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: '#1e283a',
+                                titleColor: '#ffffff',
+                                bodyColor: '#d1d5db',
+                                borderColor: '#38bcf8',
+                                borderWidth: 1,
+                            },
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 110,
+                                display: false
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.05)'
+                                },
+                                ticks: {
+                                    color: '#9ca3af',
+                                    maxTicksLimit: 8
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                    },
+                    plugins: [verticalLinePlugin]
+                });
+                
+                updateCards(0, dataStore);
+                setupSlider(chart, dataStore);
+            }
+
+            function setupSlider(chart, dataStore) {
+                 const slider = document.getElementById('hour-slider');
+                 slider.addEventListener('input', (e) => {
+                    const hour = parseInt(e.target.value, 10);
+                    updateCards(hour, dataStore);
+                    
+                    // Update tooltip position
+                    if (chart.tooltip) {
+                        const chartArea = chart.chartArea;
+                        chart.tooltip.setActiveElements([
+                            { datasetIndex: 0, index: hour },
+                            { datasetIndex: 1, index: hour },
+                            { datasetIndex: 2, index: hour },
+                            { datasetIndex: 3, index: hour }
+                        ], {
+                            x: chart.scales.x.getPixelForValue(hour),
+                            y: (chartArea.top + chartArea.bottom) / 2,
+                        });
+                        chart.update();
+                    }
+                 });
+            }
+
+            function updateCards(hour, dataStore) {
+                document.getElementById('slider-value').textContent = `${hour} hodín`;
+                
+                const insulin = dataStore.insulinData[hour];
+                const ketones = dataStore.ketonesData[hour];
+                const autophagy = dataStore.autophagyData[hour];
+                const hgh = dataStore.hghData[hour];
+
+                document.getElementById('insulin-value').textContent = insulin > 70 ? 'Vysoká' : insulin > 20 ? 'Klesajúca' : 'Nízka';
+                document.getElementById('ketones-value').textContent = ketones < 10 ? 'Nízka' : ketones < 60 ? 'Stredná' : 'Vysoká';
+                document.getElementById('autophagy-value').textContent = autophagy < 10 ? 'Minimálna' : autophagy < 70 ? 'Aktívna' : 'Maximálna';
+                document.getElementById('hgh-value').textContent = hgh < 10 ? 'Normálna' : hgh < 50 ? 'Zvýšená' : 'Vysoká';
+            }
+
+            initCharts();
+
+
+            // --- EVENT LISTENERS ---
+            
+            // Protocol Details Logic
+            const detailsContainer = document.getElementById('protocol-details-container');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsSuitability = document.getElementById('details-suitability');
+            const detailsDescription = document.getElementById('details-description');
+            const detailsBenefits = document.getElementById('details-benefits');
+            const detailsRecommendations = document.getElementById('details-recommendations');
+            const closeDetailsBtn = document.getElementById('close-details');
+            
+            protocolCardsContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('div[data-index]');
+                if (card) {
+                    const protocol = protocols[card.dataset.index];
+                    detailsTitle.textContent = protocol.title;
+                    detailsSuitability.textContent = protocol.suitability;
+                    detailsDescription.textContent = protocol.description;
+                    detailsBenefits.textContent = protocol.benefits;
+                    detailsRecommendations.textContent = protocol.recommendations;
+                    
+                    detailsContainer.classList.remove('hidden');
+                    setTimeout(() => {
+                        detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            });
+
+            closeDetailsBtn.addEventListener('click', () => {
+                detailsContainer.classList.add('hidden');
+            });
+
+            // Accordion Logic
+            accordionContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('button');
+                if (button) {
+                    const content = button.nextElementSibling;
+                    const icon = button.querySelector('span:last-child');
+                    
+                    const isOpening = !content.style.maxHeight;
+                    
+                    // Close all other items before opening the new one
+                    accordionContainer.querySelectorAll('.px-4.pb-0').forEach(el => {
+                        el.style.maxHeight = null;
+                        el.previousElementSibling.querySelector('span:last-child').style.transform = 'rotate(0deg)';
+                    });
+
+                    if (isOpening) {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                }
+            });
+
+            // Fade-in Animation on Scroll
+            const fadeInElements = document.querySelectorAll('.fade-in');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            fadeInElements.forEach(el => {
+                observer.observe(el);
+            });
+            // Immediately make the header visible on load
+            document.querySelector('header.fade-in').classList.add('visible');
+        });
+    </script>
+</body>
+</html>
+
