@@ -85,6 +85,42 @@
             cursor: pointer;
             border: 4px solid #0e172b;
         }
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(14, 23, 43, 0.8);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 50;
+        }
+        .modal-backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 100;
+        }
+        .modal-content.visible {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        body.modal-open {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="scroll-smooth">
@@ -166,12 +202,12 @@
             </div>
         </section>
 
-        <!-- Sekcia Grafy -->
+        <!-- Sekcia Vizualizácie -->
         <section class="my-24 fade-in">
-            <h2 class="text-3xl font-bold text-center mb-4">Vizualizácia Priebehu Pôstu</h2>
-            <p class="text-center text-gray-400 mb-10">Posuňte a sledujte, ako sa menia kľúčové ukazovatele v priebehu 72 hodín.</p>
-            
-            <div class="bg-[#1e283a] p-6 md:p-8 rounded-2xl shadow-lg">
+             <div class="bg-[#1e283a] p-6 md:p-8 rounded-2xl shadow-lg">
+                <h2 class="text-3xl font-bold text-center mb-4">Vizualizácia Priebehu Pôstu</h2>
+                <p class="text-center text-gray-400 mb-10">Posuňte a sledujte, ako sa menia kľúčové ukazovatele v priebehu 72 hodín.</p>
+                
                 <!-- Slider -->
                 <div class="mb-8">
                     <div class="flex justify-between items-center mb-2">
@@ -205,6 +241,70 @@
                 <!-- Chart -->
                 <div class="relative h-64 md:h-96">
                     <canvas id="fastingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Circadian Chart Section -->
+            <div class="bg-[#1e283a] p-6 md:p-8 rounded-2xl shadow-lg mt-12">
+                <h2 class="text-3xl font-bold text-center mb-4">Zosúladenie s Cirkadiánnym Rytmom</h2>
+                <p class="text-center text-gray-400 mb-10 max-w-2xl mx-auto">Načasovanie jedla je rovnako dôležité ako dĺžka pôstu. Nastavte si jedálenské okno a zistite, ako sa zhoduje s prirodzeným rytmom vášho tela.</p>
+            
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    <div class="lg:col-span-1 space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="start-time-slider" class="font-semibold">Začiatok jedla</label>
+                                <span id="start-time-label" class="text-lg font-bold highlight-text">08:00</span>
+                            </div>
+                            <input type="range" id="start-time-slider" min="0" max="23" value="8" step="1">
+                        </div>
+                         <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="end-time-slider" class="font-semibold">Koniec jedla</label>
+                                <span id="end-time-label" class="text-lg font-bold highlight-text">16:00</span>
+                            </div>
+                            <input type="range" id="end-time-slider" min="0" max="23" value="16" step="1">
+                        </div>
+                        <div class="bg-[#0e172b] p-4 rounded-lg text-center">
+                            <p class="text-sm text-gray-400">Dĺžka jedálenského okna</p>
+                            <p id="eating-window-duration" class="text-2xl font-bold">8 hodín</p>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2">
+                         <div class="w-full relative pt-12">
+                            <!-- Icons above the bar -->
+                            <div class="flex justify-between px-2 text-gray-400 absolute w-full top-0 text-2xl">
+                                <div class="opacity-50">🌙</div>
+                                <div class="opacity-90">☀️</div>
+                                <div class="opacity-50">🌙</div>
+                            </div>
+
+                            <!-- Main Timeline Bar -->
+                            <div id="timeline-bar" class="h-10 w-full flex rounded-lg overflow-hidden relative shadow-inner bg-black/20">
+                                <div style="flex-grow: 6; background-color: rgba(23, 37, 84, 0.9);"></div> <!-- Noc 0-6 -->
+                                <div style="flex-grow: 6; background-color: rgba(96, 165, 250, 1);"></div>  <!-- Deň 6-12 -->
+                                <div style="flex-grow: 6; background-color: rgba(96, 165, 250, 1);"></div>  <!-- Deň 12-18 -->
+                                <div style="flex-grow: 6; background-color: rgba(23, 37, 84, 0.9);"></div> <!-- Noc 18-24 -->
+                            </div>
+
+                            <!-- User's Eating Window Overlay -->
+                            <div id="eating-window-overlay" class="absolute top-[5px] h-10 bg-accent/50 rounded-lg border-2 border-accent transition-all duration-300 ease-in-out flex items-center justify-center">
+                                <span class="font-bold text-sm text-white drop-shadow-lg">Jedlo</span>
+                            </div>
+                            
+                             <!-- Time Axis Labels -->
+                            <div id="timeline-axis" class="flex justify-between mt-2 text-xs text-gray-400">
+                                <span>00:00</span>
+                                <span>06:00</span>
+                                <span>12:00</span>
+                                <span>18:00</span>
+                                <span>24:00</span>
+                            </div>
+                        </div>
+                        <div id="circadian-legend" class="mt-6 flex flex-wrap justify-center gap-x-4 gap-y-2 text-sm text-gray-300">
+                             <!-- Legend items here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -245,8 +345,8 @@
         <!-- Sekcia Praktická Príručka -->
         <section class="my-24 fade-in">
             <h2 class="text-3xl font-bold text-center mb-10">Praktická Príručka pre Bezpečný Pôst</h2>
-            <div class="max-w-3xl mx-auto space-y-4" id="faq-accordion">
-                <!-- Accordion Items sa vygenerujú pomocou JS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto" id="guide-cards">
+                <!-- Guide cards will be generated by JS -->
             </div>
         </section>
     </main>
@@ -255,6 +355,24 @@
     <footer class="text-center py-8 mt-16 border-t border-[#1e283a]">
         <p class="text-gray-400">&copy; 2025 Sprievodca Pôstom. Vytvorené s cieľom informovať a vzdelávať.</p>
     </footer>
+
+    <!-- Modal Structure -->
+    <div id="guide-modal-backdrop" class="modal-backdrop"></div>
+    <div id="guide-modal-content" class="modal-content w-11/12 max-w-2xl">
+        <div class="glass-effect rounded-2xl p-8 relative">
+            <button id="guide-modal-close" class="absolute top-4 right-6 text-3xl text-gray-400 hover:text-white transition">&times;</button>
+            <div class="flex flex-col sm:flex-row items-center gap-6">
+                <div id="guide-modal-icon-container" class="flex-shrink-0 w-20 h-20 bg-[#0e172b] rounded-full flex items-center justify-center border-2 border-accent">
+                    <!-- Icon will be inserted here -->
+                </div>
+                <div>
+                    <h3 id="guide-modal-title" class="text-2xl font-bold highlight-text mb-2"></h3>
+                    <p id="guide-modal-text" class="text-gray-300"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -317,24 +435,33 @@
                 }
             ];
 
-            const faqData = [
+            const guideData = [
                 {
-                    question: '💧 Hydratácia a Elektrolyty',
-                    answer: 'Pite dostatok nekalorických tekutín ako voda, bylinkový čaj alebo čierna káva. Pri pôstoch nad 24 hodín je kľúčové dopĺňať elektrolyty (štipka kvalitnej soli do vody, doplnky s draslíkom a horčíkom), aby ste predišli bolestiam hlavy, únave a svalovým kŕčom.'
+                    title: 'Hydratácia a Elektrolyty',
+                    short: 'Kľúč k úspešnému pôstu bez vedľajších účinkov.',
+                    answer: 'Pite dostatok nekalorických tekutín ako voda, bylinkový čaj alebo čierna káva. Pri pôstoch nad 24 hodín je kľúčové dopĺňať elektrolyty (štipka kvalitnej soli do vody, doplnky s draslíkom a horčíkom), aby ste predišli bolestiam hlavy, únave a svalovým kŕčom.',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>`
                 },
                 {
-                    question: '🏋️ Pôst a Fyzický Výkon',
-                    answer: 'Ľahká aktivita ako chôdza alebo joga je zvyčajne v poriadku. Intenzívny tréning môže byť náročný kvôli vyčerpaným zásobám glykogénu. Tréning tesne pred prerušením pôstu môže maximalizovať rast svalov vďaka zvýšenej citlivosti na inzulín.'
+                    title: 'Pôst a Fyzický Výkon',
+                    short: 'Ako strategicky spojiť cvičenie s pôstom.',
+                    answer: 'Ľahká aktivita ako chôdza alebo joga je zvyčajne v poriadku. Intenzívny tréning môže byť náročný kvôli vyčerpaným zásobám glykogénu. Tréning tesne pred prerušením pôstu môže maximalizovať rast svalov vďaka zvýšenej citlivosti na inzulín.',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>`
                 },
                 {
-                    question: '🍲 Ako Bezpečne Prerušiť Pôst (Re-feed)',
-                    answer: 'Prerušenie dlhšieho pôstu (48h+) je kritické. Začnite pomaly a opatrne. Prvé jedlo by malo byť malé, ľahko stráviteľné, s nízkym obsahom sacharidov. Ideálny je kostný vývar, avokádo, alebo malá porcia bielkovín so zeleninou. Vyhnite sa cukru a veľkým porciám.'
+                    title: 'Bezpečné Prerušenie Pôstu',
+                    short: 'Najdôležitejší krok pri dlhších pôstoch.',
+                    answer: 'Prerušenie dlhšieho pôstu (48h+) je kritické. Začnite pomaly a opatrne, aby ste predišli tzv. refeeding syndrómu. Prvé jedlo by malo byť malé, ľahko stráviteľné, s nízkym obsahom sacharidov. Ideálny je kostný vývar, avokádo, alebo malá porcia bielkovín so zeleninou. Vyhnite sa cukru a veľkým porciám.',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-12v4m-2-2h4m6 4v4m-2-2h4M12 3v18" /></svg>`
                 },
                 {
-                    question: '⚠️ Pre Koho Pôst Nie Je Vhodný?',
-                    answer: 'Pôst nie je vhodný pre tehotné a dojčiace ženy, deti, osoby s podváhou (BMI < 18.5), s poruchami príjmu potravy v anamnéze, alebo s určitými zdravotnými stavmi (napr. diabetes 1. typu). Vždy sa poraďte so svojím lekárom predtým, ako začnete s akýmkoľvek pôstnym režimom.'
+                    title: 'Pre Koho Pôst Nie Je Vhodný?',
+                    short: 'Poznajte kontraindikácie a riziká.',
+                    answer: 'Pôst nie je vhodný pre tehotné a dojčiace ženy, deti, osoby s podváhou (BMI < 18.5), s poruchami príjmu potravy v anamnéze, alebo s určitými zdravotnými stavmi (napr. diabetes 1. typu). Vždy sa poraďte so svojím lekárom predtým, ako začnete s akýmkoľvek pôstnym režimom.',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`
                 }
             ];
+
 
             // --- RENDER FUNCTIONS ---
             const protocolCardsContainer = document.getElementById('protocol-cards');
@@ -353,20 +480,18 @@
                 protocolCardsContainer.appendChild(card);
             });
 
-            const accordionContainer = document.getElementById('faq-accordion');
-            faqData.forEach(item => {
-                const accordionItem = document.createElement('div');
-                accordionItem.className = 'bg-[#1e283a] rounded-xl overflow-hidden';
-                accordionItem.innerHTML = `
-                    <button class="w-full text-left p-4 flex justify-between items-center hover:bg-[#2a384e] transition">
-                        <span class="font-semibold">${item.question}</span>
-                        <span class="transform transition-transform duration-300 text-accent">&#9660;</span>
-                    </button>
-                    <div class="px-4 pb-0 max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                        <p class="text-gray-300 py-4 border-t border-gray-700">${item.answer}</p>
-                    </div>
+            // Render Guide Cards
+            const guideCardsContainer = document.getElementById('guide-cards');
+            guideData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-[#1e283a] p-6 rounded-2xl shadow-lg cursor-pointer transform hover:-translate-y-2 hover:shadow-cyan-500/20 transition-all duration-300 flex flex-col items-center text-center';
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <div class="w-16 h-16 mb-4 flex items-center justify-center">${item.icon.replace('h-10 w-10', 'h-12 w-12')}</div>
+                    <h4 class="text-xl font-bold mb-2">${item.title}</h4>
+                    <p class="text-gray-400 text-sm">${item.short}</p>
                 `;
-                accordionContainer.appendChild(accordionItem);
+                guideCardsContainer.appendChild(card);
             });
             
             // --- CHART LOGIC ---
@@ -376,7 +501,6 @@
 
                 const labels = Array.from({ length: 73 }, (_, i) => i);
 
-                // Approximated data based on the document
                 const insulinData = [100, 95, 90, 85, 80, 75, 70, 65, 60, 50, 40, 30, 20, 15, 12, 10, 8, 7, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
                 const ketonesData = [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 5, 8, 12, 16, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 84, 88, 92, 95, 98, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
                 const autophagyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 6, 8, 12, 16, 20, 25, 30, 35, 40, 45, 55, 65, 75, 80, 84, 88, 92, 95, 98, 99, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77];
@@ -408,85 +532,25 @@
                     data: {
                         labels: labels,
                         datasets: [
-                            {
-                                label: 'Inzulín/Glukóza',
-                                data: insulinData,
-                                borderColor: '#f87171',
-                                tension: 0.4,
-                                pointRadius: 0,
-                                borderWidth: 2,
-                            },
-                            {
-                                label: 'Ketóny',
-                                data: ketonesData,
-                                borderColor: '#4ade80',
-                                tension: 0.4,
-                                pointRadius: 0,
-                                borderWidth: 2,
-                            },
-                            {
-                                label: 'Autofágia',
-                                data: autophagyData,
-                                borderColor: '#38bcf8',
-                                tension: 0.4,
-                                pointRadius: 0,
-                                borderWidth: 2,
-                            },
-                            {
-                                label: 'HGH',
-                                data: hghData,
-                                borderColor: '#facc15',
-                                tension: 0.4,
-                                pointRadius: 0,
-                                borderWidth: 2,
-                            }
+                            { label: 'Inzulín/Glukóza', data: insulinData, borderColor: '#f87171', tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                            { label: 'Ketóny', data: ketonesData, borderColor: '#4ade80', tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                            { label: 'Autofágia', data: autophagyData, borderColor: '#38bcf8', tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                            { label: 'HGH', data: hghData, borderColor: '#facc15', tension: 0.4, pointRadius: 0, borderWidth: 2 }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        animation: {
-                           duration: 1000,
-                           easing: 'easeInOutQuad'
-                        },
+                        animation: { duration: 1000, easing: 'easeInOutQuad' },
                         plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    color: '#9ca3af',
-                                    usePointStyle: true,
-                                }
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                backgroundColor: '#1e283a',
-                                titleColor: '#ffffff',
-                                bodyColor: '#d1d5db',
-                                borderColor: '#38bcf8',
-                                borderWidth: 1,
-                            },
+                            legend: { position: 'bottom', labels: { color: '#9ca3af', usePointStyle: true } },
+                            tooltip: { mode: 'index', intersect: false, backgroundColor: '#1e283a', titleColor: '#ffffff', bodyColor: '#d1d5db', borderColor: '#38bcf8', borderWidth: 1 },
                         },
                         scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 110,
-                                display: false
-                            },
-                            x: {
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.05)'
-                                },
-                                ticks: {
-                                    color: '#9ca3af',
-                                    maxTicksLimit: 8
-                                }
-                            }
+                            y: { beginAtZero: true, max: 110, display: false },
+                            x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#9ca3af', maxTicksLimit: 8 } }
                         },
-                        interaction: {
-                            mode: 'index',
-                            intersect: false,
-                        },
+                        interaction: { mode: 'index', intersect: false, },
                     },
                     plugins: [verticalLinePlugin]
                 });
@@ -500,19 +564,11 @@
                  slider.addEventListener('input', (e) => {
                     const hour = parseInt(e.target.value, 10);
                     updateCards(hour, dataStore);
-                    
-                    // Update tooltip position
                     if (chart.tooltip) {
-                        const chartArea = chart.chartArea;
                         chart.tooltip.setActiveElements([
-                            { datasetIndex: 0, index: hour },
-                            { datasetIndex: 1, index: hour },
-                            { datasetIndex: 2, index: hour },
-                            { datasetIndex: 3, index: hour }
-                        ], {
-                            x: chart.scales.x.getPixelForValue(hour),
-                            y: (chartArea.top + chartArea.bottom) / 2,
-                        });
+                            { datasetIndex: 0, index: hour }, { datasetIndex: 1, index: hour },
+                            { datasetIndex: 2, index: hour }, { datasetIndex: 3, index: hour }
+                        ]);
                         chart.update();
                     }
                  });
@@ -520,74 +576,133 @@
 
             function updateCards(hour, dataStore) {
                 document.getElementById('slider-value').textContent = `${hour} hodín`;
-                
                 const insulin = dataStore.insulinData[hour];
                 const ketones = dataStore.ketonesData[hour];
                 const autophagy = dataStore.autophagyData[hour];
                 const hgh = dataStore.hghData[hour];
-
                 document.getElementById('insulin-value').textContent = insulin > 70 ? 'Vysoká' : insulin > 20 ? 'Klesajúca' : 'Nízka';
                 document.getElementById('ketones-value').textContent = ketones < 10 ? 'Nízka' : ketones < 60 ? 'Stredná' : 'Vysoká';
                 document.getElementById('autophagy-value').textContent = autophagy < 10 ? 'Minimálna' : autophagy < 70 ? 'Aktívna' : 'Maximálna';
                 document.getElementById('hgh-value').textContent = hgh < 10 ? 'Normálna' : hgh < 50 ? 'Zvýšená' : 'Vysoká';
             }
+            
+            function initCircadianChart() {
+                const startTimeSlider = document.getElementById('start-time-slider');
+                const endTimeSlider = document.getElementById('end-time-slider');
+                const startTimeLabel = document.getElementById('start-time-label');
+                const endTimeLabel = document.getElementById('end-time-label');
+                const durationLabel = document.getElementById('eating-window-duration');
+                const eatingWindowOverlay = document.getElementById('eating-window-overlay');
+
+                function formatTime(hour) {
+                    return hour.toString().padStart(2, '0') + ':00';
+                }
+                
+                function updateLinearTimeline() {
+                    let start = parseInt(startTimeSlider.value);
+                    let end = parseInt(endTimeSlider.value);
+
+                     if (start >= end) {
+                        if (end > 0) {
+                            start = end - 1;
+                        } else {
+                            start = 23;
+                        }
+                        startTimeSlider.value = start;
+                    }
+                    
+                    startTimeLabel.textContent = formatTime(start);
+                    endTimeLabel.textContent = formatTime(end);
+                    
+                    let eatingDuration = end - start;
+                    if (eatingDuration <= 0) eatingDuration = 1;
+                    
+                    durationLabel.textContent = `${eatingDuration} hod.`;
+
+                    const startPercent = (start / 24) * 100;
+                    const widthPercent = (eatingDuration / 24) * 100;
+
+                    eatingWindowOverlay.style.left = `${startPercent}%`;
+                    eatingWindowOverlay.style.width = `${widthPercent}%`;
+                }
+                
+                const legendContainer = document.getElementById('circadian-legend');
+                const legendData = [
+                    { label: 'Noc (Odpočinok)', color: 'rgba(23, 37, 84, 0.9)' },
+                    { label: 'Deň (Aktivita)', color: 'rgba(96, 165, 250, 1)' },
+                    { label: 'Vaše jedlo', color: 'rgba(56, 188, 248, 0.5)' }
+                ];
+
+                legendContainer.innerHTML = '';
+                legendData.forEach(item => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'flex items-center';
+                    legendItem.innerHTML = `<span class="w-3 h-3 rounded-full mr-2" style="background-color: ${item.color}"></span><span>${item.label}</span>`;
+                    legendContainer.appendChild(legendItem);
+                });
+
+                startTimeSlider.addEventListener('input', updateLinearTimeline);
+                endTimeSlider.addEventListener('input', updateLinearTimeline);
+                updateLinearTimeline();
+            }
 
             initCharts();
-
+            initCircadianChart();
 
             // --- EVENT LISTENERS ---
             
             // Protocol Details Logic
             const detailsContainer = document.getElementById('protocol-details-container');
-            const detailsTitle = document.getElementById('details-title');
-            const detailsSuitability = document.getElementById('details-suitability');
-            const detailsDescription = document.getElementById('details-description');
-            const detailsBenefits = document.getElementById('details-benefits');
-            const detailsRecommendations = document.getElementById('details-recommendations');
             const closeDetailsBtn = document.getElementById('close-details');
-            
             protocolCardsContainer.addEventListener('click', (e) => {
                 const card = e.target.closest('div[data-index]');
                 if (card) {
                     const protocol = protocols[card.dataset.index];
-                    detailsTitle.textContent = protocol.title;
-                    detailsSuitability.textContent = protocol.suitability;
-                    detailsDescription.textContent = protocol.description;
-                    detailsBenefits.textContent = protocol.benefits;
-                    detailsRecommendations.textContent = protocol.recommendations;
-                    
+                    document.getElementById('details-title').textContent = protocol.title;
+                    document.getElementById('details-suitability').textContent = protocol.suitability;
+                    document.getElementById('details-description').textContent = protocol.description;
+                    document.getElementById('details-benefits').textContent = protocol.benefits;
+                    document.getElementById('details-recommendations').textContent = protocol.recommendations;
                     detailsContainer.classList.remove('hidden');
                     setTimeout(() => {
                         detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 100);
                 }
             });
-
             closeDetailsBtn.addEventListener('click', () => {
                 detailsContainer.classList.add('hidden');
             });
 
-            // Accordion Logic
-            accordionContainer.addEventListener('click', (e) => {
-                const button = e.target.closest('button');
-                if (button) {
-                    const content = button.nextElementSibling;
-                    const icon = button.querySelector('span:last-child');
-                    
-                    const isOpening = !content.style.maxHeight;
-                    
-                    // Close all other items before opening the new one
-                    accordionContainer.querySelectorAll('.px-4.pb-0').forEach(el => {
-                        el.style.maxHeight = null;
-                        el.previousElementSibling.querySelector('span:last-child').style.transform = 'rotate(0deg)';
-                    });
+            // Guide Modal Logic
+            const guideModalBackdrop = document.getElementById('guide-modal-backdrop');
+            const guideModalContent = document.getElementById('guide-modal-content');
+            const guideModalCloseBtn = document.getElementById('guide-modal-close');
+            
+            function openGuideModal(index) {
+                const item = guideData[index];
+                document.getElementById('guide-modal-icon-container').innerHTML = item.icon;
+                document.getElementById('guide-modal-title').textContent = item.title;
+                document.getElementById('guide-modal-text').textContent = item.answer;
+                document.body.classList.add('modal-open');
+                guideModalBackdrop.classList.add('visible');
+                guideModalContent.classList.add('visible');
+            }
 
-                    if (isOpening) {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        icon.style.transform = 'rotate(180deg)';
-                    }
+            function closeGuideModal() {
+                document.body.classList.remove('modal-open');
+                guideModalBackdrop.classList.remove('visible');
+                guideModalContent.classList.remove('visible');
+            }
+
+            guideCardsContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('div[data-index]');
+                if (card) {
+                    openGuideModal(card.dataset.index);
                 }
             });
+
+            guideModalCloseBtn.addEventListener('click', closeGuideModal);
+            guideModalBackdrop.addEventListener('click', closeGuideModal);
 
             // Fade-in Animation on Scroll
             const fadeInElements = document.querySelectorAll('.fade-in');
@@ -603,7 +718,6 @@
             fadeInElements.forEach(el => {
                 observer.observe(el);
             });
-            // Immediately make the header visible on load
             document.querySelector('header.fade-in').classList.add('visible');
         });
     </script>
